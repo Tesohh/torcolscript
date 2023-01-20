@@ -1,5 +1,6 @@
 from logs import log
 import sympy
+import re
 
 torcolMem = {
     "fassavalley": "bestiale",
@@ -24,6 +25,9 @@ def replacer(words: list[str]):
         elif w.startswith("=="):
             w = w.replace("==", "")
             w = float(sympy.sympify(w))
+        elif w.startswith("!!"):
+            w = w.replace("!!", "")
+            w = eval(w)
         words[i] = w
     return words
 
