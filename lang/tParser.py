@@ -61,8 +61,6 @@ def execTorcol(words: list[str]):
 
     elif command == "fadoiconc":
         operator = words[3]
-        print(words)
-
         getVarFromMem(words[1])  # da errore se non esiste la variabile
 
         if operator == "+":
@@ -73,6 +71,9 @@ def execTorcol(words: list[str]):
             torcolMem[words[1]] = float(words[2]) * float(words[4])
         elif operator == "/":
             torcolMem[words[1]] = float(words[2]) / float(words[4])
+
+    elif command == "meti_ite_zeche" or command == "meti":
+        getVarFromMem(words[1])
 
 
 def torcler(script: str):
