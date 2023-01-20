@@ -1,6 +1,5 @@
 from logs import log
 import sympy
-import re
 
 torcolMem = {
     "fassavalley": "bestiale",
@@ -36,48 +35,84 @@ def execTorcol(words: list[str]):
     command = words[0]
     words = replacer(words)
 
-    if command == 'stampa':
-        for i in words[1:]:
-            print(i, end=" ")
-        print("")
+    match command:
+        case 'stampa':
+            for i in words[1:]:
+                print(i, end=" ")
+            print("")
 
-    elif command == 'defenir' or command == 'def':
-        key = words[1].replace("$", "")
-        value = words[2]
+        case "metiitezeche" | "meti":
 
-        # if value.startswith("$"):
-        #     value = getVarFromMem(value)
-        # elif value.startswith("=="):
-        #     value = value.replace("==", "")
-        #     value = eval(value)
+            getVarFromMem(words[1])
+            metimento = input(' '.join(words[2:])).strip()
+            try:
+                metimento = float(metimento)
+            except:
+                pass
+            torcolMem[words[1]] = metimento
 
-        try:
-            value = int(value)
-        except:
-            pass
+        case 'defenir' | 'def':
+            key = words[1].replace("$", "")
+            if len(words) >= 2:
+                value = ' '.join(words[2:])
+            else:
+                value = 0
 
-        if value == "vera":
-            value = True
-        elif value == "faus":
-            value = False
+            try:
+                value = int(value)
+            except:
+                pass
 
-        torcolMem[key] = value
+            if value == "vera":
+                value = True
+            elif value == "faus":
+                value = False
 
-    elif command == "fadoiconc":
-        operator = words[3]
-        getVarFromMem(words[1])  # da errore se non esiste la variabile
+            torcolMem[key] = value
 
-        if operator == "+":
-            torcolMem[words[1]] = float(words[2]) + float(words[4])
-        elif operator == "-":
-            torcolMem[words[1]] = float(words[2]) - float(words[4])
-        elif operator == "*":
-            torcolMem[words[1]] = float(words[2]) * float(words[4])
-        elif operator == "/":
-            torcolMem[words[1]] = float(words[2]) / float(words[4])
+        case "fadoiconc":
+            operator = words[3]
+            getVarFromMem(words[1])  # da errore se non esiste la variabile
 
-    elif command == "meti_ite_zeche" or command == "meti":
-        getVarFromMem(words[1])
+            try:
+                match operator:
+                    case "+":
+                        torcolMem[words[1]] = float(words[2]) + float(words[4])
+                    case "-":
+                        torcolMem[words[1]] = float(words[2]) - float(words[4])
+                    case "*":
+                        torcolMem[words[1]] = float(words[2]) * float(words[4])
+                    case "/":
+                        torcolMem[words[1]] = float(words[2]) / float(words[4])
+
+                    case "=":
+                        torcolMem[words[1]] = words[2] == words[4]
+                    case ">":
+                        torcolMem[words[1]] = float(words[2]) > float(words[4])
+                    case ">=":
+                        torcolMem[words[1]] = float(words[2]) >= float(words[4])
+                    case "<":
+                        torcolMem[words[1]] = float(words[2]) < float(words[4])
+                    case "<=":
+                        torcolMem[words[1]] = float(words[2]) <= float(words[4])
+                    case _:
+                        log(f"Operator {operator} no troado", 2)
+                        exit()
+            except ValueError:
+                log("Hai inserito una stringa coglione", 2)
+                exit()
+
+        case "se":
+            if words[1] == True:
+                execTorcol(words[2:])
+        
+
+        case _:
+            if command != "":
+                log(f"Ordinanza {command} no troada", 2)
+                exit()
+
+    
 
 
 def torcler(script: str):
