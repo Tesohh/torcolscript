@@ -1,0 +1,15 @@
+stampa --- CALCOLATORA in torcol fascian ---
+defenir giuralo voto
+
+defenir numer1 0
+defenir operator a
+defenir numer2 0
+
+meti numer1 numer1 > 
+meti operator operator (+ - * /) > 
+meti numer2 numer2 > 
+
+defenir totale 0
+fadoiconc totale $numer1 $operator $numer2
+
+stampa $totale
