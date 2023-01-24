@@ -24,7 +24,7 @@ try:
         fileToOpen = "nop.torcol"
     f = open(fileToOpen, "r")
 except:
-    log(f"File {fileToOpen} not found", 2)
+    log(f"Sto ciapin {fileToOpen} no le stat troà", 2)
     exit()
 
 torcol = f.read()

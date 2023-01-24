@@ -99,13 +99,15 @@ def execTorcol(words: list[str]):
                         log(f"Operator {operator} no troado", 2)
                         exit()
             except ValueError:
-                log("Hai inserito una stringa coglione", 2)
+                log("tas metù ite na corda coion", 2)
                 exit()
 
         case "se":
             if words[1] == True:
                 execTorcol(words[2:])
-        
+        case "ripeter":
+            if len(words) > 2:
+                for i in range(int(words[1])): execTorcol(words[2:])
 
         case _:
             if command != "":
