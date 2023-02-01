@@ -16,11 +16,16 @@ def calculateExpression(expression: str):
     return evalSpecial(ast.parse(expression, mode='eval').body)
 
 def evalSpecial(element):
-    if isinstance(element, ast.Num): # <number>
+    # eval costanti
+    if isinstance(element, ast.Num):
         return element.n
-    elif isinstance(element, ast.BinOp): # <left> <operator> <right>
+
+    # eval operazioni
+    elif isinstance(element, ast.BinOp):
         return operators[type(element.op)](evalSpecial(element.left), evalSpecial(element.right))
-    elif isinstance(element, ast.UnaryOp): # <operator> <operand> e.g., -1
+    
+    # eval numeri negativi
+    elif isinstance(element, ast.UnaryOp):
         return operators[type(element.op)](evalSpecial(element.operand))
     else:
         raise TypeError(element)
