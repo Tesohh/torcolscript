@@ -57,85 +57,82 @@ def replacer(words: list[str]):
 def execTorcol(words: list[str]):
     command = words[0]
     words = replacer(words)
+    if command == 'stampa':
+        for i in words[1:]:
+            print(i, end=" ")
+        print("")
 
-    match command:
-        case 'stampa':
-            for i in words[1:]:
-                print(i, end=" ")
-            print("")
+    elif command == "metiitezeche" | "meti":
 
-        case "metiitezeche" | "meti":
+        getVarFromMem(words[1])
+        metimento = input(' '.join(words[2:])).strip()
+        try:
+            metimento = float(metimento)
+        except:
+            pass
+        torcolMem[words[1]] = metimento
 
-            getVarFromMem(words[1])
-            metimento = input(' '.join(words[2:])).strip()
-            try:
-                metimento = float(metimento)
-            except:
-                pass
-            torcolMem[words[1]] = metimento
+    elif command == 'defenir' | 'def':
+        key = words[1].replace("$", "")
+        if len(words) >= 2:
+            value = ' '.join(words[2:])
+        else:
+            value = 0
 
-        case 'defenir' | 'def':
-            key = words[1].replace("$", "")
-            if len(words) >= 2:
-                value = ' '.join(words[2:])
-            else:
-                value = 0
+        try:
+            value = int(value)
+        except:
+            pass
 
-            try:
-                value = int(value)
-            except:
-                pass
+        if value == "vera":
+            value = True
+        elif value == "faus":
+            value = False
 
-            if value == "vera":
-                value = True
-            elif value == "faus":
-                value = False
+        torcolMem[key] = value
 
-            torcolMem[key] = value
+    elif command == "fadoiconc":
+        operator = words[3]
+        getVarFromMem(words[1])  # da errore se non esiste la variabile
 
-        case "fadoiconc":
-            operator = words[3]
-            getVarFromMem(words[1])  # da errore se non esiste la variabile
+        try:
+                if operator == "+":
+                    torcolMem[words[1]] = float(words[2]) + float(words[4])
+                elif operator == "-":
+                    torcolMem[words[1]] = float(words[2]) - float(words[4])
+                elif operator == "*":
+                    torcolMem[words[1]] = float(words[2]) * float(words[4])
+                elif operator == "/":
+                    torcolMem[words[1]] = float(words[2]) / float(words[4])
 
-            try:
-                match operator:
-                    case "+":
-                        torcolMem[words[1]] = float(words[2]) + float(words[4])
-                    case "-":
-                        torcolMem[words[1]] = float(words[2]) - float(words[4])
-                    case "*":
-                        torcolMem[words[1]] = float(words[2]) * float(words[4])
-                    case "/":
-                        torcolMem[words[1]] = float(words[2]) / float(words[4])
+                elif operator == "==":
+                    torcolMem[words[1]] = words[2] == words[4]
+                elif operator == ">":
+                    torcolMem[words[1]] = float(words[2]) > float(words[4])
+                elif operator == ">=":
+                    torcolMem[words[1]] = float(words[2]) >= float(words[4])
+                elif operator == "<":
+                    torcolMem[words[1]] = float(words[2]) < float(words[4])
+                elif operator == "<=":
+                    torcolMem[words[1]] = float(words[2]) <= float(words[4])
+                else:
+                    log(f"Operator {operator} no troado", 2)
+                    exit()
+        except ValueError:
+            log("tas metù ite na corda", 2)
+            exit()
 
-                    case "==":
-                        torcolMem[words[1]] = words[2] == words[4]
-                    case ">":
-                        torcolMem[words[1]] = float(words[2]) > float(words[4])
-                    case ">=":
-                        torcolMem[words[1]] = float(words[2]) >= float(words[4])
-                    case "<":
-                        torcolMem[words[1]] = float(words[2]) < float(words[4])
-                    case "<=":
-                        torcolMem[words[1]] = float(words[2]) <= float(words[4])
-                    case _:
-                        log(f"Operator {operator} no troado", 2)
-                        exit()
-            except ValueError:
-                log("tas metù ite na corda", 2)
-                exit()
+    elif command == "se":
+        if words[1] == True:
+            execTorcol(words[2:])
+    elif command == "ripeter":
+        if len(words) > 2:
+            for i in range(int(words[1])): execTorcol(words[2:])
 
-        case "se":
-            if words[1] == True:
-                execTorcol(words[2:])
-        case "ripeter":
-            if len(words) > 2:
-                for i in range(int(words[1])): execTorcol(words[2:])
-
-        case _:
-            if command != "":
-                log(f"Ordinanza {command} no troada", 2)
-                exit()
+    else:
+        if command != "":
+            log(f"Ordinanza {command} no troada", 2)
+            exit()
 
     
 
