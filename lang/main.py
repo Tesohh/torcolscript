@@ -1,6 +1,5 @@
 # TorcolScript
-# Scritto da tesohh
-# Collaborazione linguistica dal signor Direttore "Alder"
+# Scritto da tesohh e alder (p1)
 
 from tParser import log, torcler
 from pprinter import pprint

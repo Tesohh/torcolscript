@@ -1,0 +1,4 @@
+defenir calcoloAssurdo =2**3
+defenir risultato
+fadoiconc risultato $calcoloAssurdo + =4
+stampa $risultato

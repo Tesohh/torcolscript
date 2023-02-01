@@ -1,12 +1,31 @@
 from logs import log
-import sympy
+# import sympy
+import ast
+import operator as op
 
 torcolMem = {
     "fassavalley": "bestiale",
-    "numer": 3
 }
+# operatori validi
+operators = {ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+             ast.Div: op.truediv, ast.Pow: op.pow, ast.BitXor: op.xor,
+             ast.USub: op.neg}
 
+# una sorta di eval ma sicuro che non permette di mettere funzioni
+def calculateExpression(expression: str):
+    return evalSpecial(ast.parse(expression, mode='eval').body)
 
+def evalSpecial(element):
+    if isinstance(element, ast.Num): # <number>
+        return element.n
+    elif isinstance(element, ast.BinOp): # <left> <operator> <right>
+        return operators[type(element.op)](evalSpecial(element.left), evalSpecial(element.right))
+    elif isinstance(element, ast.UnaryOp): # <operator> <operand> e.g., -1
+        return operators[type(element.op)](evalSpecial(element.operand))
+    else:
+        raise TypeError(element)
+
+# prendi dal dizionario torcolMem una variabile
 def getVarFromMem(key: str):
     key = key.replace("$", "")
     try:
@@ -21,9 +40,13 @@ def replacer(words: list[str]):
         w = words[i]
         if w.startswith("$"):
             w = getVarFromMem(w)
-        elif w.startswith("=="):
-            w = w.replace("==", "")
-            w = float(sympy.sympify(w))
+        elif w.startswith("="):
+            w = w.replace("=", "")
+            try:
+                w = str(calculateExpression(w))
+            except:
+                log(f"errore nel calcolo {w}", 2)
+                exit()
         elif w.startswith("!!"):
             w = w.replace("!!", "")
             w = eval(w)
@@ -85,7 +108,7 @@ def execTorcol(words: list[str]):
                     case "/":
                         torcolMem[words[1]] = float(words[2]) / float(words[4])
 
-                    case "=":
+                    case "==":
                         torcolMem[words[1]] = words[2] == words[4]
                     case ">":
                         torcolMem[words[1]] = float(words[2]) > float(words[4])
@@ -99,7 +122,7 @@ def execTorcol(words: list[str]):
                         log(f"Operator {operator} no troado", 2)
                         exit()
             except ValueError:
-                log("tas metù ite na corda coion", 2)
+                log("tas metù ite na corda", 2)
                 exit()
 
         case "se":
