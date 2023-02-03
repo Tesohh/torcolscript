@@ -40,7 +40,7 @@ def getVarFromMem(key: str):
         exit()
 
 
-def replacer(words: list[str]):
+def replacer(words):
     for i in range(len(words)):
         w = words[i]
         if w.startswith("$"):
@@ -59,7 +59,7 @@ def replacer(words: list[str]):
     return words
 
 
-def execTorcol(words: list[str]):
+def execTorcol(words):
     command = words[0]
     words = replacer(words)
     if command == 'stampa':
@@ -67,7 +67,7 @@ def execTorcol(words: list[str]):
             print(i, end=" ")
         print("")
 
-    elif command == "metiitezeche" | "meti":
+    elif command == "metiitezeche" or command == "meti":
 
         getVarFromMem(words[1])
         metimento = input(' '.join(words[2:])).strip()
@@ -77,7 +77,7 @@ def execTorcol(words: list[str]):
             pass
         torcolMem[words[1]] = metimento
 
-    elif command == 'defenir' | 'def':
+    elif command == 'defenir' or command == 'def':
         key = words[1].replace("$", "")
         if len(words) >= 2:
             value = ' '.join(words[2:])
